@@ -7,15 +7,9 @@ sudo docker build \
     -t telegram-base \
     .
 
-# remove old dockers
 if [[ "$(sudo docker ps -a | grep telegram-customized)" != "" ]]; then
     echo deleting temerary image telegram-customized
     sudo docker rm telegram-customized
-fi
-
-if [[ "$(docker images -q telegram:latest 2> /dev/null)" != "" ]]; then
-    echo deleting image telegram
-    sudo docker rmi telegram
 fi
 
 echo -e "\n\n\n\nGive telegram your phone number (prepend 1 for USA) and enter code"
@@ -23,9 +17,14 @@ echo -e "then press <C+C> <CR> to exit and save\n\n\n"
 sudo docker run -it --name="telegram-customized" telegram-base /home/anon/tg/bin/telegram-cli
 
 while true; do
-    read -p "\n\n\nSave configuration? [y/n] : " yn
+    read -p "Save configuration? [y/n] : " yn
     case $yn in
         [Yy]* )
+            if [[ "$(sudo docker images -q telegram:latest 2> /dev/null)" != "" ]]; then
+                echo deleting old telegram image
+                sudo docker rmi telegram
+            fi
+
             sudo docker commit telegram-customized telegram
 			break;;
         [Nn]* ) exit;;
