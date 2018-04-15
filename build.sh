@@ -25,7 +25,8 @@ while true; do
                 sudo docker rmi telegram
             fi
 
-            sudo docker commit telegram-customized telegram
+            # need to set the entrypoint back to entry script.
+            sudo docker commit --change='ENTRYPOINT ["telegram.sh"]' telegram-customized telegram
 			break;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;
